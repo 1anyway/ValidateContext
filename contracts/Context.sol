@@ -29,6 +29,9 @@ abstract contract Context {
      *
      * - The call must be made directly by an externally owned account (EOA).
      * - The call must not be made through a proxy.
+     *
+     * @param thisAddr The expected address of the current contract instance. This is used to ensure
+     *                 that the call is not being made through a proxy contract.
      */
     modifier onlyEOAWithoutProxies(address thisAddr) {
         bool cond1 = msg.sender == tx.origin;
@@ -61,6 +64,9 @@ abstract contract Context {
      * Requirements:
      *
      * - The call must not be made through a proxy.
+     *
+     * @param thisAddr The expected address of the current contract instance. This is used to ensure
+     *                 that the call is not being made through a proxy contract.
      */
     modifier noProxy(address thisAddr) {
         require(address(this) == thisAddr, "Context: call must not be through a proxy");
