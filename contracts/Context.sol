@@ -14,6 +14,8 @@ pragma solidity ^0.8.0;
  * This contract is only required for intermediate, library-like contracts.
  */
 abstract contract Context {
+    address private immutable __self = address(this);
+
     function _msgSender() internal view virtual returns (address) {
         return msg.sender;
     }
@@ -29,13 +31,10 @@ abstract contract Context {
      *
      * - The call must be made directly by an externally owned account (EOA).
      * - The call must not be made through a proxy.
-     *
-     * @param thisAddr The expected address of the current contract instance. This is used to ensure
-     *                 that the call is not being made through a proxy contract.
      */
-    modifier onlyEOAWithoutProxies(address thisAddr) {
+    modifier onlyEOAWithoutProxies() {
         bool cond1 = msg.sender == tx.origin;
-        bool cond2 = address(this) == thisAddr;
+        bool cond2 = address(this) == __self;
         require(cond1 && cond2, "Context: call must be direct and without proxies");
         _;
     }
@@ -64,12 +63,9 @@ abstract contract Context {
      * Requirements:
      *
      * - The call must not be made through a proxy.
-     *
-     * @param thisAddr The expected address of the current contract instance. This is used to ensure
-     *                 that the call is not being made through a proxy contract.
      */
-    modifier noProxy(address thisAddr) {
-        require(address(this) == thisAddr, "Context: call must not be through a proxy");
+    modifier noProxy() {
+        require(address(this) == __self, "Context: call must not be through a proxy");
         _;
     }
 }
